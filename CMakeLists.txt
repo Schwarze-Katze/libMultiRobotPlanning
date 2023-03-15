@@ -6,7 +6,7 @@ find_package(Boost 1.58 REQUIRED COMPONENTS program_options)
 find_package(PkgConfig)
 pkg_check_modules(YamlCpp yaml-cpp)
 
-# check if Doxygen is installed
+# check if Doxygen is installed 
 find_package(Doxygen)
 
 if (DOXYGEN_FOUND)
