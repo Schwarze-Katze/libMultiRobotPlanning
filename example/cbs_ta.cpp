@@ -16,7 +16,7 @@ using libMultiRobotPlanning::PlanResult;
 using libMultiRobotPlanning::NextBestAssignment;
 
 struct State {
-  State(int time, int x, int y) : time(time), x(x), y(y) {}
+  State(int time, int x, int y) : time(time), x(x), y(y) { }
 
   bool operator==(const State& s) const {
     return time == s.time && x == s.x && y == s.y;
@@ -35,22 +35,26 @@ struct State {
 };
 
 namespace std {
-template <>
-struct hash<State> {
-  size_t operator()(const State& s) const {
-    size_t seed = 0;
-    boost::hash_combine(seed, s.time);
-    boost::hash_combine(seed, s.x);
-    boost::hash_combine(seed, s.y);
-    return seed;
-  }
-};
+  template <>
+  struct hash<State> {
+    size_t operator()(const State& s) const {
+      size_t seed = 0;
+      boost::hash_combine(seed, s.time);
+      boost::hash_combine(seed, s.x);
+      boost::hash_combine(seed, s.y);
+      return seed;
+    }
+  };
 }  // namespace std
 
 ///
 enum class Action {
   Up,
+  UpLeft,
+  UpRight,
   Down,
+  DownLeft,
+  DownRight,
   Left,
   Right,
   Wait,
@@ -58,21 +62,33 @@ enum class Action {
 
 std::ostream& operator<<(std::ostream& os, const Action& a) {
   switch (a) {
-    case Action::Up:
-      os << "Up";
-      break;
-    case Action::Down:
-      os << "Down";
-      break;
-    case Action::Left:
-      os << "Left";
-      break;
-    case Action::Right:
-      os << "Right";
-      break;
-    case Action::Wait:
-      os << "Wait";
-      break;
+  case Action::Up:
+    os << "Up";
+    break;
+  case Action::UpLeft:
+    os << "UpLeft";
+    break;
+  case Action::UpRight:
+    os << "UpRight";
+    break;
+  case Action::Down:
+    os << "Down";
+    break;
+  case Action::DownLeft:
+    os << "DownLeft";
+    break;
+  case Action::DownRight:
+    os << "DownRight";
+    break;
+  case Action::Left:
+    os << "Left";
+    break;
+  case Action::Right:
+    os << "Right";
+    break;
+  case Action::Wait:
+    os << "Wait";
+    break;
   }
   return os;
 }
@@ -97,18 +113,18 @@ struct Conflict {
 
   friend std::ostream& operator<<(std::ostream& os, const Conflict& c) {
     switch (c.type) {
-      case Vertex:
-        return os << c.time << ": Vertex(" << c.x1 << "," << c.y1 << ")";
-      case Edge:
-        return os << c.time << ": Edge(" << c.x1 << "," << c.y1 << "," << c.x2
-                  << "," << c.y2 << ")";
+    case Vertex:
+      return os << c.time << ": Vertex(" << c.x1 << "," << c.y1 << ")";
+    case Edge:
+      return os << c.time << ": Edge(" << c.x1 << "," << c.y1 << "," << c.x2
+        << "," << c.y2 << ")";
     }
     return os;
   }
 };
 
 struct VertexConstraint {
-  VertexConstraint(int time, int x, int y) : time(time), x(x), y(y) {}
+  VertexConstraint(int time, int x, int y) : time(time), x(x), y(y) { }
   int time;
   int x;
   int y;
@@ -127,21 +143,21 @@ struct VertexConstraint {
 };
 
 namespace std {
-template <>
-struct hash<VertexConstraint> {
-  size_t operator()(const VertexConstraint& s) const {
-    size_t seed = 0;
-    boost::hash_combine(seed, s.time);
-    boost::hash_combine(seed, s.x);
-    boost::hash_combine(seed, s.y);
-    return seed;
-  }
-};
+  template <>
+  struct hash<VertexConstraint> {
+    size_t operator()(const VertexConstraint& s) const {
+      size_t seed = 0;
+      boost::hash_combine(seed, s.time);
+      boost::hash_combine(seed, s.x);
+      boost::hash_combine(seed, s.y);
+      return seed;
+    }
+  };
 }  // namespace std
 
 struct EdgeConstraint {
   EdgeConstraint(int time, int x1, int y1, int x2, int y2)
-      : time(time), x1(x1), y1(y1), x2(x2), y2(y2) {}
+    : time(time), x1(x1), y1(y1), x2(x2), y2(y2) { }
   int time;
   int x1;
   int y1;
@@ -150,33 +166,33 @@ struct EdgeConstraint {
 
   bool operator<(const EdgeConstraint& other) const {
     return std::tie(time, x1, y1, x2, y2) <
-           std::tie(other.time, other.x1, other.y1, other.x2, other.y2);
+      std::tie(other.time, other.x1, other.y1, other.x2, other.y2);
   }
 
   bool operator==(const EdgeConstraint& other) const {
     return std::tie(time, x1, y1, x2, y2) ==
-           std::tie(other.time, other.x1, other.y1, other.x2, other.y2);
+      std::tie(other.time, other.x1, other.y1, other.x2, other.y2);
   }
 
   friend std::ostream& operator<<(std::ostream& os, const EdgeConstraint& c) {
     return os << "EC(" << c.time << "," << c.x1 << "," << c.y1 << "," << c.x2
-              << "," << c.y2 << ")";
+      << "," << c.y2 << ")";
   }
 };
 
 namespace std {
-template <>
-struct hash<EdgeConstraint> {
-  size_t operator()(const EdgeConstraint& s) const {
-    size_t seed = 0;
-    boost::hash_combine(seed, s.time);
-    boost::hash_combine(seed, s.x1);
-    boost::hash_combine(seed, s.y1);
-    boost::hash_combine(seed, s.x2);
-    boost::hash_combine(seed, s.y2);
-    return seed;
-  }
-};
+  template <>
+  struct hash<EdgeConstraint> {
+    size_t operator()(const EdgeConstraint& s) const {
+      size_t seed = 0;
+      boost::hash_combine(seed, s.time);
+      boost::hash_combine(seed, s.x1);
+      boost::hash_combine(seed, s.y1);
+      boost::hash_combine(seed, s.x2);
+      boost::hash_combine(seed, s.y2);
+      return seed;
+    }
+  };
 }  // namespace std
 
 struct Constraints {
@@ -185,9 +201,9 @@ struct Constraints {
 
   void add(const Constraints& other) {
     vertexConstraints.insert(other.vertexConstraints.begin(),
-                             other.vertexConstraints.end());
+      other.vertexConstraints.end());
     edgeConstraints.insert(other.edgeConstraints.begin(),
-                           other.edgeConstraints.end());
+      other.edgeConstraints.end());
   }
 
   bool overlap(const Constraints& other) const {
@@ -217,7 +233,7 @@ struct Constraints {
 
 struct Location {
   Location() = default;
-  Location(int x, int y) : x(x), y(y) {}
+  Location(int x, int y) : x(x), y(y) { }
   int x;
   int y;
 
@@ -235,45 +251,45 @@ struct Location {
 };
 
 namespace std {
-template <>
-struct hash<Location> {
-  size_t operator()(const Location& s) const {
-    size_t seed = 0;
-    boost::hash_combine(seed, s.x);
-    boost::hash_combine(seed, s.y);
-    return seed;
-  }
-};
+  template <>
+  struct hash<Location> {
+    size_t operator()(const Location& s) const {
+      size_t seed = 0;
+      boost::hash_combine(seed, s.x);
+      boost::hash_combine(seed, s.y);
+      return seed;
+    }
+  };
 }  // namespace std
 
 #include "shortest_path_heuristic.hpp"
 
 ///
 class Environment {
- public:
+public:
   Environment(size_t dimx, size_t dimy,
-              const std::unordered_set<Location>& obstacles,
-              const std::vector<State>& startStates,
-              const std::vector<std::unordered_set<Location> >& goals,
-              size_t maxTaskAssignments)
-      : m_dimx(dimx),
-        m_dimy(dimy),
-        m_obstacles(obstacles),
-        m_agentIdx(0),
-        m_goal(nullptr),
-        m_constraints(nullptr),
-        m_lastGoalConstraint(-1),
-        m_maxTaskAssignments(maxTaskAssignments),
-        m_numTaskAssignments(0),
-        m_highLevelExpanded(0),
-        m_lowLevelExpanded(0),
-        m_heuristic(dimx, dimy, obstacles) {
+    const std::unordered_set<Location>& obstacles,
+    const std::vector<State>& startStates,
+    const std::vector<std::unordered_set<Location> >& goals,
+    size_t maxTaskAssignments)
+    : m_dimx(dimx),
+    m_dimy(dimy),
+    m_obstacles(obstacles),
+    m_agentIdx(0),
+    m_goal(nullptr),
+    m_constraints(nullptr),
+    m_lastGoalConstraint(-1),
+    m_maxTaskAssignments(maxTaskAssignments),
+    m_numTaskAssignments(0),
+    m_highLevelExpanded(0),
+    m_lowLevelExpanded(0),
+    m_heuristic(dimx, dimy, obstacles) {
     m_numAgents = startStates.size();
     for (size_t i = 0; i < startStates.size(); ++i) {
       for (const auto& goal : goals[i]) {
         m_assignment.setCost(
-            i, goal, m_heuristic.getValue(
-                         Location(startStates[i].x, startStates[i].y), goal));
+          i, goal, m_heuristic.getValue(
+            Location(startStates[i].x, startStates[i].y), goal));
         m_goals.insert(goal);
       }
     }
@@ -281,7 +297,7 @@ class Environment {
   }
 
   void setLowLevelContext(size_t agentIdx, const Constraints* constraints,
-                          const Location* task) {
+    const Location* task) {
     assert(constraints);
     m_agentIdx = agentIdx;
     m_goal = task;
@@ -293,7 +309,8 @@ class Environment {
           m_lastGoalConstraint = std::max(m_lastGoalConstraint, vc.time);
         }
       }
-    } else {
+    }
+    else {
       for (const auto& vc : constraints->vertexConstraints) {
         m_lastGoalConstraint = std::max(m_lastGoalConstraint, vc.time);
       }
@@ -305,7 +322,8 @@ class Environment {
   int admissibleHeuristic(const State& s) {
     if (m_goal != nullptr) {
       return m_heuristic.getValue(Location(s.x, s.y), *m_goal);
-    } else {
+    }
+    else {
       return 0;
     }
   }
@@ -319,7 +337,7 @@ class Environment {
   }
 
   void getNeighbors(const State& s,
-                    std::vector<Neighbor<State, Action, int> >& neighbors) {
+    std::vector<Neighbor<State, Action, int> >& neighbors) {
     // std::cout << "#VC " << constraints.vertexConstraints.size() << std::endl;
     // for(const auto& vc : constraints.vertexConstraints) {
     //   std::cout << "  " << vc.time << "," << vc.x << "," << vc.y <<
@@ -334,21 +352,49 @@ class Environment {
           atGoal = s.x == m_goal->x && s.y == m_goal->y;
         }
         neighbors.emplace_back(
-            Neighbor<State, Action, int>(n, Action::Wait, atGoal ? 0 : 1));
+          Neighbor<State, Action, int>(n, Action::Wait, atGoal ? 0 : 1));
       }
     }
     {
       State n(s.time + 1, s.x - 1, s.y);
       if (stateValid(n) && transitionValid(s, n)) {
         neighbors.emplace_back(
-            Neighbor<State, Action, int>(n, Action::Left, 1));
+          Neighbor<State, Action, int>(n, Action::Left, 1));
+      }
+    }
+    {
+      State n(s.time + 1, s.x - 1, s.y - 1);
+      if (stateValid(n) && transitionValid(s, n)) {
+        neighbors.emplace_back(
+          Neighbor<State, Action, int>(n, Action::DownLeft, 1));
+      }
+    }
+    {
+      State n(s.time + 1, s.x - 1, s.y + 1);
+      if (stateValid(n) && transitionValid(s, n)) {
+        neighbors.emplace_back(
+          Neighbor<State, Action, int>(n, Action::UpLeft, 1));
       }
     }
     {
       State n(s.time + 1, s.x + 1, s.y);
       if (stateValid(n) && transitionValid(s, n)) {
         neighbors.emplace_back(
-            Neighbor<State, Action, int>(n, Action::Right, 1));
+          Neighbor<State, Action, int>(n, Action::Right, 1));
+      }
+    }
+    {
+      State n(s.time + 1, s.x + 1, s.y - 1);
+      if (stateValid(n) && transitionValid(s, n)) {
+        neighbors.emplace_back(
+          Neighbor<State, Action, int>(n, Action::DownRight, 1));
+      }
+    }
+    {
+      State n(s.time + 1, s.x + 1, s.y + 1);
+      if (stateValid(n) && transitionValid(s, n)) {
+        neighbors.emplace_back(
+          Neighbor<State, Action, int>(n, Action::UpRight, 1));
       }
     }
     {
@@ -361,14 +407,14 @@ class Environment {
       State n(s.time + 1, s.x, s.y - 1);
       if (stateValid(n) && transitionValid(s, n)) {
         neighbors.emplace_back(
-            Neighbor<State, Action, int>(n, Action::Down, 1));
+          Neighbor<State, Action, int>(n, Action::Down, 1));
       }
     }
   }
 
   bool getFirstConflict(
-      const std::vector<PlanResult<State, Action, int> >& solution,
-      Conflict& result) {
+    const std::vector<PlanResult<State, Action, int> >& solution,
+    Conflict& result) {
     int max_t = 0;
     for (const auto& sol : solution) {
       max_t = std::max<int>(max_t, sol.states.size());
@@ -401,7 +447,7 @@ class Environment {
           State state2a = getState(j, solution, t);
           State state2b = getState(j, solution, t + 1);
           if (state1a.equalExceptTime(state2b) &&
-              state1b.equalExceptTime(state2a)) {
+            state1b.equalExceptTime(state2a)) {
             result.time = t;
             result.agent1 = i;
             result.agent2 = j;
@@ -420,21 +466,22 @@ class Environment {
   }
 
   void createConstraintsFromConflict(
-      const Conflict& conflict, std::map<size_t, Constraints>& constraints) {
+    const Conflict& conflict, std::map<size_t, Constraints>& constraints) {
     if (conflict.type == Conflict::Vertex) {
       Constraints c1;
       c1.vertexConstraints.emplace(
-          VertexConstraint(conflict.time, conflict.x1, conflict.y1));
+        VertexConstraint(conflict.time, conflict.x1, conflict.y1));
       constraints[conflict.agent1] = c1;
       constraints[conflict.agent2] = c1;
-    } else if (conflict.type == Conflict::Edge) {
+    }
+    else if (conflict.type == Conflict::Edge) {
       Constraints c1;
       c1.edgeConstraints.emplace(EdgeConstraint(
-          conflict.time, conflict.x1, conflict.y1, conflict.x2, conflict.y2));
+        conflict.time, conflict.x1, conflict.y1, conflict.x2, conflict.y2));
       constraints[conflict.agent1] = c1;
       Constraints c2;
       c2.edgeConstraints.emplace(EdgeConstraint(
-          conflict.time, conflict.x2, conflict.y2, conflict.x1, conflict.y1));
+        conflict.time, conflict.x2, conflict.y2, conflict.x1, conflict.y1));
       constraints[conflict.agent2] = c2;
     }
   }
@@ -458,7 +505,7 @@ class Environment {
   void onExpandHighLevelNode(int /*cost*/) { m_highLevelExpanded++; }
 
   void onExpandLowLevelNode(const State& /*s*/, int /*fScore*/,
-                            int /*gScore*/) {
+    int /*gScore*/) {
     m_lowLevelExpanded++;
   }
 
@@ -468,10 +515,10 @@ class Environment {
 
   size_t numTaskAssignments() const { return m_numTaskAssignments; }
 
- private:
+private:
   State getState(size_t agentIdx,
-                 const std::vector<PlanResult<State, Action, int> >& solution,
-                 size_t t) {
+    const std::vector<PlanResult<State, Action, int> >& solution,
+    size_t t) {
     assert(agentIdx < solution.size());
     if (t < solution[agentIdx].states.size()) {
       return solution[agentIdx].states[t].first;
@@ -484,18 +531,18 @@ class Environment {
     assert(m_constraints);
     const auto& con = m_constraints->vertexConstraints;
     return s.x >= 0 && s.x < m_dimx && s.y >= 0 && s.y < m_dimy &&
-           m_obstacles.find(Location(s.x, s.y)) == m_obstacles.end() &&
-           con.find(VertexConstraint(s.time, s.x, s.y)) == con.end();
+      m_obstacles.find(Location(s.x, s.y)) == m_obstacles.end() &&
+      con.find(VertexConstraint(s.time, s.x, s.y)) == con.end();
   }
 
   bool transitionValid(const State& s1, const State& s2) {
     assert(m_constraints);
     const auto& con = m_constraints->edgeConstraints;
     return con.find(EdgeConstraint(s1.time, s1.x, s1.y, s2.x, s2.y)) ==
-           con.end();
+      con.end();
   }
 
- private:
+private:
   int m_dimx;
   int m_dimy;
   std::unordered_set<Location> m_obstacles;
@@ -521,13 +568,13 @@ int main(int argc, char* argv[]) {
   std::string outputFile;
   size_t maxTaskAssignments;
   desc.add_options()("help", "produce help message")(
-      "input,i", po::value<std::string>(&inputFile)->required(),
-      "input file (YAML)")("output,o",
-                           po::value<std::string>(&outputFile)->required(),
-                           "output file (YAML)")(
-      "maxTaskAssignments",
-      po::value<size_t>(&maxTaskAssignments)->default_value(1e9),
-      "maximum number of task assignments to try");
+    "input,i", po::value<std::string>(&inputFile)->required(),
+    "input file (YAML)")("output,o",
+      po::value<std::string>(&outputFile)->required(),
+      "output file (YAML)")(
+        "maxTaskAssignments",
+        po::value<size_t>(&maxTaskAssignments)->default_value(1e9),
+        "maximum number of task assignments to try");
 
   try {
     po::variables_map vm;
@@ -538,7 +585,8 @@ int main(int argc, char* argv[]) {
       std::cout << desc << "\n";
       return 0;
     }
-  } catch (po::error& e) {
+  }
+  catch (po::error& e) {
     std::cerr << e.what() << std::endl << std::endl;
     std::cerr << desc << std::endl;
     return 1;
@@ -578,9 +626,9 @@ int main(int argc, char* argv[]) {
   }
 
   Environment mapf(dimx, dimy, obstacles, startStates, goals,
-                   maxTaskAssignments);
+    maxTaskAssignments);
   CBSTA<State, Action, int, Conflict, Constraints, Location, Environment>
-      cbs(mapf);
+    cbs(mapf);
   std::vector<PlanResult<State, Action, int> > solution;
 
   Timer timer;
@@ -618,11 +666,12 @@ int main(int argc, char* argv[]) {
       out << "  agent" << a << ":" << std::endl;
       for (const auto& state : solution[a].states) {
         out << "    - x: " << state.first.x << std::endl
-            << "      y: " << state.first.y << std::endl
-            << "      t: " << state.second << std::endl;
+          << "      y: " << state.first.y << std::endl
+          << "      t: " << state.second << std::endl;
       }
     }
-  } else {
+  }
+  else {
     std::cout << "Planning NOT successful!" << std::endl;
   }
 
