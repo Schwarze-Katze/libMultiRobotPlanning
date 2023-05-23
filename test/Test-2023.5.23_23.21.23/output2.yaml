@@ -1,0 +1,192 @@
+map:
+  dimensions:
+    - 857
+    - 716
+  obstacles:
+    -
+      - 162
+      - 82
+    -
+      - 97
+      - 132
+    -
+      - 59
+      - 186
+    -
+      - 54
+      - 126
+    -
+      - 147
+      - 188
+    -
+      - 25
+      - 42
+    -
+      - 132
+      - 43
+    -
+      - 144
+      - 39
+    -
+      - 137
+      - 192
+    -
+      - 96
+      - 23
+    -
+      - 147
+      - 28
+    -
+      - 18
+      - 93
+    -
+      - 124
+      - 50
+    -
+      - 140
+      - 140
+    -
+      - 132
+      - 178
+    -
+      - 10
+      - 46
+    -
+      - 60
+      - 60
+    -
+      - 178
+      - 71
+    -
+      - 198
+      - 184
+    -
+      - 150
+      - 145
+agents:
+  - name: agent1
+    start:
+      - 328
+      - 330
+    goal:
+      - 359
+      - 317
+  - name: agent2
+    start:
+      - 221
+      - 256
+    goal:
+      - 186
+      - 248
+  - name: agent3
+    start:
+      - 199
+      - 38
+    goal:
+      - 218
+      - 83
+  - name: agent4
+    start:
+      - 306
+      - 114
+    goal:
+      - 363
+      - 78
+  - name: agent5
+    start:
+      - 447
+      - 237
+    goal:
+      - 464
+      - 234
+  - name: agent6
+    start:
+      - 382
+      - 483
+    goal:
+      - 425
+      - 489
+  - name: agent11
+    start:
+      - 220
+      - 457
+    goal:
+      - 226
+      - 408
+  - name: agent12
+    start:
+      - 423
+      - 144
+    goal:
+      - 440
+      - 140
+  - name: agent13
+    start:
+      - 505
+      - 39
+    goal:
+      - 553
+      - 0
+  - name: agent15
+    start:
+      - 592
+      - 111
+    goal:
+      - 626
+      - 149
+  - name: agent16
+    start:
+      - 522
+      - 191
+    goal:
+      - 563
+      - 198
+  - name: agent17
+    start:
+      - 616
+      - 273
+    goal:
+      - 619
+      - 278
+  - name: agent18
+    start:
+      - 586
+      - 305
+    goal:
+      - 575
+      - 287
+  - name: agent19
+    start:
+      - 531
+      - 313
+    goal:
+      - 537
+      - 303
+  - name: agent20
+    start:
+      - 796
+      - 292
+    goal:
+      - 772
+      - 362
+  - name: agent21
+    start:
+      - 683
+      - 407
+    goal:
+      - 685
+      - 464
+  - name: agent22
+    start:
+      - 618
+      - 492
+    goal:
+      - 590
+      - 468
+  - name: agent23
+    start:
+      - 434
+      - 401
+    goal:
+      - 437
+      - 382

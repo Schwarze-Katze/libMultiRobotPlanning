@@ -1,0 +1,16 @@
+map:
+  dimensions: [5, 5]
+  obstacles:
+    - [0, 1]
+    - [1, 1]
+    - [2, 1]
+    - [4, 1]
+agents:
+  - name: agent0
+    start: [0, 0]
+    potentialGoals:
+      - [3, 3]
+  - name: agent1
+    start: [1, 0]
+    potentialGoals: 
+      - [0, 4]

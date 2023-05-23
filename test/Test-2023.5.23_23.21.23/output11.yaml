@@ -1,0 +1,162 @@
+map:
+  dimensions:
+    - 857
+    - 716
+  obstacles:
+    -
+      - 162
+      - 82
+    -
+      - 97
+      - 132
+    -
+      - 59
+      - 186
+    -
+      - 54
+      - 126
+    -
+      - 147
+      - 188
+    -
+      - 25
+      - 42
+    -
+      - 132
+      - 43
+    -
+      - 144
+      - 39
+    -
+      - 137
+      - 192
+    -
+      - 96
+      - 23
+    -
+      - 147
+      - 28
+    -
+      - 18
+      - 93
+    -
+      - 124
+      - 50
+    -
+      - 140
+      - 140
+    -
+      - 132
+      - 178
+    -
+      - 10
+      - 46
+    -
+      - 60
+      - 60
+    -
+      - 178
+      - 71
+    -
+      - 198
+      - 184
+    -
+      - 150
+      - 145
+agents:
+  - name: agent1
+    start:
+      - 359
+      - 317
+    goal: ~
+  - name: agent2
+    start:
+      - 186
+      - 248
+    goal: ~
+  - name: agent3
+    start:
+      - 218
+      - 83
+    goal: ~
+  - name: agent4
+    start:
+      - 306
+      - 114
+    goal: ~
+  - name: agent5
+    start:
+      - 478
+      - 226
+    goal:
+      - 464
+      - 234
+  - name: agent6
+    start:
+      - 425
+      - 489
+    goal: ~
+  - name: agent11
+    start:
+      - 214
+      - 432
+    goal: ~
+  - name: agent12
+    start:
+      - 428
+      - 186
+    goal: ~
+  - name: agent13
+    start:
+      - 505
+      - 39
+    goal: ~
+  - name: agent15
+    start:
+      - 592
+      - 111
+    goal: ~
+  - name: agent16
+    start:
+      - 541
+      - 202
+    goal: ~
+  - name: agent17
+    start:
+      - 630
+      - 266
+    goal: ~
+  - name: agent18
+    start:
+      - 586
+      - 305
+    goal: ~
+  - name: agent19
+    start:
+      - 549
+      - 316
+    goal:
+      - 508
+      - 282
+  - name: agent20
+    start:
+      - 796
+      - 292
+    goal: ~
+  - name: agent21
+    start:
+      - 685
+      - 464
+    goal: ~
+  - name: agent22
+    start:
+      - 590
+      - 468
+    goal: ~
+  - name: agent23
+    start:
+      - 437
+      - 382
+    goal:
+      - 377
+      - 423

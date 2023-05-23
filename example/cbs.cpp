@@ -48,7 +48,11 @@ struct hash<State> {
 ///
 enum class Action {
   Up,
+  UpLeft,
+  UpRight,
   Down,
+  DownLeft,
+  DownRight,
   Left,
   Right,
   Wait,
@@ -59,9 +63,21 @@ std::ostream& operator<<(std::ostream& os, const Action& a) {
     case Action::Up:
       os << "Up";
       break;
+      case Action::UpLeft:
+    os << "UpLeft";
+    break;
+  case Action::UpRight:
+    os << "UpRight";
+    break;
     case Action::Down:
       os << "Down";
       break;
+      case Action::DownLeft:
+    os << "DownLeft";
+    break;
+  case Action::DownRight:
+    os << "DownRight";
+    break;
     case Action::Left:
       os << "Left";
       break;
@@ -312,10 +328,38 @@ class Environment {
       }
     }
     {
+      State n(s.time + 1, s.x - 1, s.y - 1);
+      if (stateValid(n) && transitionValid(s, n)) {
+        neighbors.emplace_back(
+          Neighbor<State, Action, int>(n, Action::DownLeft, 1));
+      }
+    }
+    {
+      State n(s.time + 1, s.x - 1, s.y + 1);
+      if (stateValid(n) && transitionValid(s, n)) {
+        neighbors.emplace_back(
+          Neighbor<State, Action, int>(n, Action::UpLeft, 1));
+      }
+    }
+    {
       State n(s.time + 1, s.x + 1, s.y);
       if (stateValid(n) && transitionValid(s, n)) {
         neighbors.emplace_back(
             Neighbor<State, Action, int>(n, Action::Right, 1));
+      }
+    }
+    {
+      State n(s.time + 1, s.x + 1, s.y - 1);
+      if (stateValid(n) && transitionValid(s, n)) {
+        neighbors.emplace_back(
+          Neighbor<State, Action, int>(n, Action::DownRight, 1));
+      }
+    }
+    {
+      State n(s.time + 1, s.x + 1, s.y + 1);
+      if (stateValid(n) && transitionValid(s, n)) {
+        neighbors.emplace_back(
+          Neighbor<State, Action, int>(n, Action::UpRight, 1));
       }
     }
     {
@@ -610,21 +654,23 @@ int main(int argc, char* argv[]) {
   std::unordered_set<Location> obstacles;
   std::vector<Location> goals;
   std::vector<State> startStates;
-
   const auto& dim = config["map"]["dimensions"];
   int dimx = dim[0].as<int>();
   int dimy = dim[1].as<int>();
-
   for (const auto& node : config["map"]["obstacles"]) {
     obstacles.insert(Location(node[0].as<int>(), node[1].as<int>()));
   }
-
   for (const auto& node : config["agents"]) {
     const auto& start = node["start"];
     const auto& goal = node["goal"];
     startStates.emplace_back(State(0, start[0].as<int>(), start[1].as<int>()));
     // std::cout << "s: " << startStates.back() << std::endl;
-    goals.emplace_back(Location(goal[0].as<int>(), goal[1].as<int>()));
+    if (goal.size()) {
+      goals.emplace_back(Location(goal[0].as<int>(), goal[1].as<int>()));
+    }
+    else {
+      goals.emplace_back(Location(start[0].as<int>(), start[1].as<int>()));
+    }
   }
 
   // sanity check: no identical start states
